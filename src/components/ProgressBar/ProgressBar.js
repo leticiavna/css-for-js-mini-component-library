@@ -41,7 +41,7 @@ const ProgressBar = ({ value, size }) => {
       aria-label="Progress bar"
       $size={size}
     >
-      <Bar $width={value} $size={size} />
+      <Bar $width={value} $size={size} role="progressbar" />
     </Wrapper>
   );
 };
