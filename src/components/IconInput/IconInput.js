@@ -6,78 +6,90 @@ import { COLORS } from '../../constants';
 import Icon from '../Icon';
 import VisuallyHidden from '../VisuallyHidden';
 
-const inputHeights = {
-  small: 24,
-  large: 36,
-};
+const STYLES = {
+  small: {
+    fontSize: 14,
+    iconSize: 16,
+    borderThickness: 1,
+    height: 24,
+  },
 
-const inputPadding = {
-  small: 24,
-  large: 36,
-};
+  large: {
+    fontSize: 18,
+    iconSize: 24,
+    borderThickness: 2,
+    height: 36,
+  }
+}
 
-const inputFontSize = {
-  small: 14,
-  large: 18,
-};
-
-const Wrapper = styled.div`
+/**
+ * This is a label component because it does include a label (visually hidden)
+ * and it gives advantagens in the clicking events
+ */
+const Wrapper = styled.label`
+  display: block;
   position: relative;
+  color: ${COLORS.gray700};
 
-  &:hover > * {
+  &:hover {
     color: ${COLORS.black};
   }
 `;
 
+const IconWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  height: var(--size);
+`;
+
 const Input = styled.input`
-  border: 2px solid transparent;
-  border-bottom: 2px solid ${COLORS.black};
-  border-radius: 2px;
-  outline-offset: 4px;
-  height: ${(props) => inputHeights[props.size]}px;
-  width: ${(props) => props.$width}px;
-  padding-left: ${(props) => inputPadding[props.size]}px; // 24px + 12px or 16px + 8px; The first one is icon width, the second is margin
-  font-family: Roboto;
-  font-size: ${(props) => inputFontSize[props.size]}px;
-  font-style: normal;
+  width: var(--width);
+  height: var(--height);
+  font-size: var(--font-size);
+  border: none;
+  border-bottom: var(--border-thickness) solid ${COLORS.black};
+  padding-left: var(--height);
+  color: inherit;
   font-weight: 700;
-  line-height: normal;
-  color: ${COLORS.gray500};
+  outline-offset: 2px;
 
   &::placeholder {
+    color: ${COLORS.gray500};
     font-weight: 400;
   }
 `;
 
-const iconSizes = {
-  small: 16,
-  large: 24,
-};
-
-const iconStroke = {
-  small: 1,
-  large: 2,
-};
-
-
-const InputIcon = styled(Icon)`
-  position: absolute;
-  bottom: ${(props) => props.size === 24 ? 7 : 5}px; // Add 1 px of border
-  color: ${COLORS.gray700};
-`;
 
 const IconInput = ({
   label,
   icon,
   width = 250,
   size,
-  placeholder,
+  ...delegated
 }) => {
+  const styles = STYLES[size];
+
+  if (!styles) throw new Error('Size not mapped');
+
   return (
     <Wrapper>
-      <VisuallyHidden><label htmlFor="searchInput">{label}</label></VisuallyHidden>
-      <InputIcon id={icon} size={iconSizes[size]} strokeWidth={iconStroke[size]} />
-      <Input $width={width} placeholder={placeholder} aria-label={label} name="searchInput" size={size} />
+      <VisuallyHidden>{label}</VisuallyHidden>
+      <IconWrapper style={{ '--size': styles.iconSize + 'px'}}>
+        <Icon id={icon} size={styles.iconSize} strokeWidth={styles.borderThickness} />
+      </IconWrapper>
+      <Input 
+        {...delegated}
+        style={{
+          '--width': width + 'px',
+          '--height': (styles.height / 16) + 'rem', /* This is rem because we want the box size to scale with the pixel size */ 
+          '--border-thickness': styles.borderThickness + 'px',
+          '--font-size': (styles.fontSize / 16) + 'rem',
+        }} 
+        name="searchInput"
+        size={size}
+      />
     </Wrapper>
   );
 };
