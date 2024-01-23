@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { COLORS } from '../../constants';
 import Icon from '../Icon';
 import { getDisplayedValue } from './Select.helpers';
+import VisuallyHidden from '../VisuallyHidden';
 
 
 const Wrapper = styled.div`
@@ -37,7 +38,7 @@ const SelectBox = styled.select`
   border: 1px solid transparent;
   outline-color: ${COLORS.primary};
   // to check: make this width fluid accordingly to the option selected
-  width: 200px;
+  min-width: 200px;
 `;
 
 
@@ -46,11 +47,12 @@ const Select = ({ label, value, onChange, children }) => {
 
   return (
     <Wrapper>
-      <SelectBox value={value} onChange={onChange}>
+      <VisuallyHidden><label htmlFor="selectInput">{label}</label></VisuallyHidden>
+      <SelectBox name="selectInput" value={value} onChange={onChange}>
       {children}
-
+      {displayedValue}
       </SelectBox>
-      <SelectArrow id="chevron-down" size="12" strokeWidth="2" />
+      <SelectArrow id="chevron-down" size={12} strokeWidth={2} />
     </Wrapper>
   );
 };
