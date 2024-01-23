@@ -6,16 +6,20 @@ import { COLORS } from '../../constants';
 import Icon from '../Icon';
 import VisuallyHidden from '../VisuallyHidden';
 
-const iconSizes = {
-  small: 16,
-  large: 24,
-};
-
 const inputHeights = {
   small: 24,
   large: 36,
-}
+};
 
+const inputPadding = {
+  small: 24,
+  large: 36,
+};
+
+const inputFontSize = {
+  small: 14,
+  large: 18,
+};
 
 const Wrapper = styled.div`
   position: relative;
@@ -32,14 +36,29 @@ const Input = styled.input`
   outline-offset: 4px;
   height: ${(props) => inputHeights[props.size]}px;
   width: ${(props) => props.$width}px;
-  padding-left: ${(props) => props.size === 'large' ? 36 : 24}px; // 24px + 12px or 16px + 8px; The first one is icon width, the second is margin
+  padding-left: ${(props) => inputPadding[props.size]}px; // 24px + 12px or 16px + 8px; The first one is icon width, the second is margin
   font-family: Roboto;
-  font-size: ${(props) => props.size === 'large' ? 18 : 14}px;
+  font-size: ${(props) => inputFontSize[props.size]}px;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 700;
   line-height: normal;
   color: ${COLORS.gray500};
+
+  &::placeholder {
+    font-weight: 400;
+  }
 `;
+
+const iconSizes = {
+  small: 16,
+  large: 24,
+};
+
+const iconStroke = {
+  small: 1,
+  large: 2,
+};
+
 
 const InputIcon = styled(Icon)`
   position: absolute;
@@ -56,11 +75,9 @@ const IconInput = ({
 }) => {
   return (
     <Wrapper>
-      <InputIcon id={icon} size={iconSizes[size]} s />
       <VisuallyHidden><label htmlFor="searchInput">{label}</label></VisuallyHidden>
-      <Input $width={width} placeholder={placeholder} aria-label={label} name="searchInput" size={size}>
-
-      </Input>
+      <InputIcon id={icon} size={iconSizes[size]} strokeWidth={iconStroke[size]} />
+      <Input $width={width} placeholder={placeholder} aria-label={label} name="searchInput" size={size} />
     </Wrapper>
   );
 };
